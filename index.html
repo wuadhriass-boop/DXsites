@@ -10,9 +10,10 @@
     html,body {
       height:100%;
       margin:0;
-      font-family: 'Poppins', system-ui, sans-serif;
+      font-family: 'Poppins', sans-serif;
       overflow-x:hidden;
-      background: linear-gradient(to bottom, #020111 0%, #0b0c1c 70%, #1a1b2a 100%);
+      background: radial-gradient(circle at top, #000010 0%, #050512 40%, #0a0b15 100%);
+      color:#fff;
     }
 
     /* --- Stars --- */
@@ -24,14 +25,14 @@
                   radial-gradient(white, rgba(255,255,255,0) 70%) 50px 100px/2px 2px,
                   radial-gradient(white, rgba(255,255,255,0) 70%) 130px 250px/2px 2px,
                   radial-gradient(white, rgba(255,255,255,0) 70%) 300px 400px/2px 2px;
-      opacity:0.4;
+      opacity:0.3;
       animation: starTwinkle 8s linear infinite alternate;
       pointer-events:none;
       z-index:0;
     }
     @keyframes starTwinkle {
-      from { opacity:0.3; }
-      to { opacity:0.6; }
+      from { opacity:0.2; }
+      to { opacity:0.5; }
     }
 
     /* --- Shooting stars --- */
@@ -43,15 +44,48 @@
       opacity:0.4;
       transform: rotate(45deg);
       top:-100px;
-      animation: shoot 3s linear infinite;
+      animation: shoot 5s linear infinite;
       z-index:0;
     }
     .shooting-star:nth-child(1) { left:10%; animation-delay:2s; }
-    .shooting-star:nth-child(2) { left:70%; animation-delay:5s; }
-    .shooting-star:nth-child(3) { left:40%; animation-delay:8s; }
+    .shooting-star:nth-child(2) { left:70%; animation-delay:6s; }
+    .shooting-star:nth-child(3) { left:40%; animation-delay:10s; }
     @keyframes shoot {
       from { transform: translateY(-200px) translateX(200px) rotate(45deg); opacity:0.5; }
       to { transform: translateY(600px) translateX(-800px) rotate(45deg); opacity:0; }
+    }
+
+    /* --- Moon --- */
+    .moon {
+      position: fixed;
+      top: 80px;
+      right: 120px;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fff 0%, #ddd 60%, #bbb 100%);
+      box-shadow: 0 0 60px rgba(255,255,255,0.4);
+      z-index: 0;
+    }
+
+    /* --- Clouds --- */
+    .cloud {
+      position: fixed;
+      top: 200px;
+      width: 400px;
+      height: 120px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 200px;
+      filter: blur(20px);
+      animation: cloudMove 60s linear infinite;
+      z-index: 0;
+    }
+    .cloud:nth-child(1) { left: -500px; top: 250px; animation-delay: 0s; }
+    .cloud:nth-child(2) { left: -800px; top: 320px; animation-delay: 20s; }
+    .cloud:nth-child(3) { left: -600px; top: 180px; animation-delay: 40s; }
+    @keyframes cloudMove {
+      from { transform: translateX(0); }
+      to { transform: translateX(200vw); }
     }
 
     /* Layout */
@@ -67,12 +101,10 @@
     }
 
     .site-title {
-      color:#fff;
       font-size:2.5rem;
       margin-bottom:2rem;
-      letter-spacing:0.5px;
       font-weight:700;
-      text-shadow:0 2px 10px rgba(0,0,0,0.5);
+      text-shadow:0 2px 10px rgba(0,0,0,0.6);
     }
 
     .grid-links {
@@ -89,37 +121,20 @@
       background: rgba(255,255,255,0.05);
       border-radius:20px;
       padding:28px;
-      display:block;
+      text-align:center;
       text-decoration:none;
       color:#fff;
-      border:1px solid rgba(255,255,255,0.08);
+      border:1px solid rgba(255,255,255,0.05);
       box-shadow: 0 6px 25px rgba(255, 60, 60, 0.06);
       transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
       backdrop-filter: blur(6px);
-      text-align:center;
-    }
-    .glow-box h2 {
-      margin:0;
-      font-size:1.2rem;
-      font-weight:600;
-      color:#fff;
     }
     .glow-box:hover {
       transform: translateY(-6px) scale(1.03);
       box-shadow: 0 10px 50px rgba(255,80,80,0.5), 0 2px 8px rgba(0,0,0,0.6);
       background: rgba(255,255,255,0.08);
     }
-
-    /* beat pulse */
-    .beat {
-      transform: scale(1.04);
-      box-shadow: 0 14px 60px rgba(255,80,80,0.6) !important;
-      transition: transform 120ms linear, box-shadow 120ms linear;
-    }
-    .body-beat {
-      filter: brightness(1.25) saturate(1.15);
-      transition: filter 120ms linear;
-    }
+    .glow-box.beat { box-shadow: 0 10px 50px rgba(255,50,50,0.7) !important; transform:scale(1.03); }
 
     /* Music bar */
     .music-bar {
@@ -133,42 +148,51 @@
       border-radius:16px;
       backdrop-filter: blur(10px);
       color:#fff;
-      box-shadow: 0 6px 30px rgba(0,0,0,0.6);
       z-index:60;
-      font-family:'Poppins', sans-serif;
+      box-shadow: 0 6px 30px rgba(0,0,0,0.6);
+      display:none;
     }
-    .music-bar .title { font-weight:600; font-size:15px; }
-    .music-bar .sub { font-size:12px; color:rgba(255,255,255,0.78); margin-top:4px; }
     .progress { margin-top:10px; height:8px; background: rgba(255,255,255,0.12); border-radius:999px; overflow:hidden; }
     .progress-inner { width:0%; height:100%; background: linear-gradient(90deg, rgba(255,100,100,0.95), rgba(255,20,20,0.95)); border-radius:999px; transition: width 150ms linear; }
-    .time { margin-top:6px; font-size:12px; color:rgba(255,255,255,0.75); display:flex; justify-content:space-between; align-items:center; }
+    .time { margin-top:6px; font-size:12px; color:rgba(255,255,255,0.75); display:flex; justify-content:space-between; }
 
-    .mute-hint { font-size:12px; color: rgba(255,255,255,0.7); margin-left:6px; }
-    .play-toggle {
-      margin-left:8px;
-      background: rgba(255,255,255,0.06);
-      border-radius:8px;
-      padding:6px;
-      cursor:pointer;
-      display:inline-flex;
+    /* Start overlay */
+    #startOverlay {
+      position:fixed; inset:0;
+      background: rgba(0,0,0,0.9);
+      color:white;
+      display:flex;
+      flex-direction:column;
       align-items:center;
       justify-content:center;
-      width:32px;
-      height:32px;
-      border:1px solid rgba(255,255,255,0.04);
+      z-index:100;
+      text-align:center;
     }
-    .play-toggle svg { width:16px; height:16px; fill:#fff; opacity:0.95; }
+    #startOverlay button {
+      margin-top:20px;
+      padding:12px 28px;
+      background:#ff3b3b;
+      border:none;
+      border-radius:12px;
+      font-size:16px;
+      color:#fff;
+      cursor:pointer;
+      transition: background .2s ease;
+    }
+    #startOverlay button:hover { background:#ff2020; }
   </style>
 </head>
 <body>
-  <!-- shooting stars -->
+  <div class="moon"></div>
+  <div class="cloud"></div>
+  <div class="cloud"></div>
+  <div class="cloud"></div>
   <div class="shooting-star"></div>
   <div class="shooting-star"></div>
   <div class="shooting-star"></div>
 
   <div class="page-wrap">
     <h1 class="site-title">DXsites</h1>
-
     <div class="grid-links">
       <a href="https://shockify.st/?code=NjA5NDA2MDEyMjAwOTI0OTA4MA==" target="_blank" class="glow-box"><h2>Main DX Gen!</h2></a>
       <a href="https://shockify.lol/webhook-spammer?ref=CQWWrz3X" target="_blank" class="glow-box"><h2>DX Webhook Spammer</h2></a>
@@ -181,63 +205,65 @@
 
   <div id="player" style="width:0;height:0;overflow:hidden;position:fixed;left:-9999px;top:-9999px;"></div>
 
-  <div class="music-bar">
-    <div style="display:flex;align-items:center;justify-content:space-between">
-      <div>
-        <div class="title">Stay With Me — 1nonly</div>
-        <div class="sub">Sodaboi Remix</div>
-      </div>
-      <div style="display:flex;align-items:center">
-        <div id="muteHint" class="mute-hint">🔈 Click anywhere</div>
-        <div class="play-toggle" id="playToggle">
-          <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
-        </div>
-      </div>
-    </div>
+  <div class="music-bar" id="musicBar">
+    <div style="font-weight:600">🎵 Stay With Me — 1nonly</div>
     <div class="progress"><div class="progress-inner" id="progressInner"></div></div>
     <div class="time"><span id="curTime">0:00</span><span id="durTime">/ 2:01</span></div>
+  </div>
+
+  <div id="startOverlay">
+    <h1>Welcome to DXsites</h1>
+    <p>Click below to start music and enter the night 🌙</p>
+    <button id="startBtn">Start</button>
   </div>
 
   <script src="https://www.youtube.com/iframe_api"></script>
   <script>
     const VIDEO_ID = 'bsi3ke52lTM';
-    const DURATION_FALLBACK = 121;
-    const BPM = 96;
-    let player, raf, beatInterval;
-
-    const body = document.body;
+    let player, raf;
     const boxes = document.querySelectorAll('.glow-box');
     const progressEl = document.getElementById('progressInner');
     const curTimeEl = document.getElementById('curTime');
     const durTimeEl = document.getElementById('durTime');
-    const muteHint = document.getElementById('muteHint');
-    const playToggle = document.getElementById('playToggle');
-    const playIcon = document.getElementById('playIcon');
+    const musicBar = document.getElementById('musicBar');
 
     function fmt(s){s=Math.floor(s);return Math.floor(s/60)+":"+(s%60<10?"0":"")+(s%60);}
 
     function onYouTubeIframeAPIReady(){
       player=new YT.Player('player',{
         videoId:VIDEO_ID,
-        playerVars:{autoplay:1,controls:0,loop:1,playlist:VIDEO_ID},
-        events:{onReady:onReady,onStateChange:onChange}
+        playerVars:{autoplay:0,controls:0,loop:1,playlist:VIDEO_ID},
+        events:{onReady:onReady}
       });
     }
-    function onReady(){
-      try{player.mute();player.playVideo();}catch(e){}
-      startBeat();
+    function onReady(){}
+
+    document.getElementById('startBtn').onclick = ()=>{
+      player.playVideo();
+      player.unMute();
+      document.getElementById('startOverlay').style.display='none';
+      musicBar.style.display='block';
       updateLoop();
-      setInterval(updateDuration,2000);
+      startBeat();
+    };
+
+    function updateLoop(){
+      function loop(){
+        const c=player.getCurrentTime();
+        const d=player.getDuration()||121;
+        progressEl.style.width=(c/d*100)+'%';
+        curTimeEl.textContent=fmt(c);
+        durTimeEl.textContent='/ '+fmt(d);
+        raf=requestAnimationFrame(loop);
+      }
+      loop();
     }
-    function onChange(e){playIcon.innerHTML=(e.data===1)?'<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>':'<path d="M8 5v14l11-7z"/>'; }
 
-    document.addEventListener('click',()=>{try{player.unMute();player.playVideo();muteHint.textContent='🔊';}catch{}},{once:true});
-    playToggle.onclick=()=>{if(player.getPlayerState()===1)player.pauseVideo();else player.playVideo();};
-
-    function updateDuration(){const d=player.getDuration()||DURATION_FALLBACK;durTimeEl.textContent='/ '+fmt(d);}
-    function updateLoop(){function loop(){const c=player.getCurrentTime();const d=player.getDuration()||DURATION_FALLBACK;progressEl.style.width=Math.min(100,(c/d)*100)+'%';curTimeEl.textContent=fmt(c);raf=requestAnimationFrame(loop);}loop();}
-
-    function startBeat(){const ms=(60/BPM)*1000;function pulse(){body.classList.add('body-beat');boxes.forEach(b=>b.classList.add('beat'));setTimeout(()=>{body.classList.remove('body-beat');boxes.forEach(b=>b.classList.remove('beat'));},120);}pulse();beatInterval=setInterval(pulse,ms);}
+    function startBeat(){
+      setInterval(()=>{
+        boxes.forEach(b=>{b.classList.add('beat'); setTimeout(()=>b.classList.remove('beat'),150);});
+      }, 600); // ~100 BPM
+    }
   </script>
 </body>
 </html>
