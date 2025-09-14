@@ -5,38 +5,120 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DXsites</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Star background */
+    body {
+      background: radial-gradient(circle at bottom, #2d0000 0%, #000000 100%);
+      overflow: hidden;
+      animation: pulseBg 3s infinite;
+    }
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: transparent url("https://www.transparenttextures.com/patterns/stardust.png") repeat;
+      opacity: 0.3;
+      pointer-events: none;
+      animation: twinkle 10s linear infinite;
+    }
+    @keyframes twinkle {
+      from { background-position: 0 0; }
+      to { background-position: -1000px 1000px; }
+    }
+    @keyframes pulseBg {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.2); }
+    }
+
+    /* Red glow on boxes */
+    .glow-box {
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
+      transition: box-shadow 0.3s ease;
+    }
+    .glow-box:hover {
+      box-shadow: 0 0 25px rgba(255, 0, 0, 0.8);
+    }
+
+    /* Music bar */
+    .music-bar {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      backdrop-filter: blur(10px);
+      padding: 12px 16px;
+      border-radius: 1rem;
+      color: white;
+      width: 250px;
+      font-size: 14px;
+    }
+    .progress {
+      height: 6px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+    .progress-inner {
+      height: 6px;
+      width: 0%;
+      background: #ff3b3b;
+      animation: progressAnim 121s linear forwards;
+    }
+    @keyframes progressAnim {
+      from { width: 0%; }
+      to { width: 100%; }
+    }
+  </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center">
-  
-  <h1 class="text-4xl font-bold mb-10 text-gray-800">DXsites</h1>
+<body class="min-h-screen flex flex-col items-center justify-center relative">
+
+  <h1 class="text-4xl font-bold mb-10 text-white">DXsites</h1>
 
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
 
-    <a href="https://shockify.st/?code=NjA5NDA2MDEyMjAwOTI0OTA4MA==" target="_blank" class="block bg-white rounded-2xl shadow-md p-8 hover:shadow-xl transition">
-      <h2 class="text-xl font-bold text-gray-800">Main DX Gen!</h2>
+    <a href="https://shockify.st/?code=NjA5NDA2MDEyMjAwOTI0OTA4MA==" target="_blank" class="glow-box block bg-white/10 backdrop-blur-md rounded-2xl shadow-md p-8 hover:bg-white/20 transition">
+      <h2 class="text-xl font-bold text-white">Main DX Gen!</h2>
     </a>
 
-    <a href="https://shockify.lol/webhook-spammer?ref=CQWWrz3X" target="_blank" class="block bg-white rounded-2xl shadow-md p-8 hover:shadow-xl transition">
-      <h2 class="text-xl font-bold text-gray-800">DX Webhook Spammer</h2>
+    <a href="https://shockify.lol/webhook-spammer?ref=CQWWrz3X" target="_blank" class="glow-box block bg-white/10 backdrop-blur-md rounded-2xl shadow-md p-8 hover:bg-white/20 transition">
+      <h2 class="text-xl font-bold text-white">DX Webhook Spammer</h2>
     </a>
 
-    <a href="https://rbxmods.st/DOXAUTOHAR" target="_blank" class="block bg-white rounded-2xl shadow-md p-8 hover:shadow-xl transition">
-      <h2 class="text-xl font-bold text-gray-800">DX Auto Har</h2>
+    <a href="https://rbxmods.st/DOXAUTOHAR" target="_blank" class="glow-box block bg-white/10 backdrop-blur-md rounded-2xl shadow-md p-8 hover:bg-white/20 transition">
+      <h2 class="text-xl font-bold text-white">DX Auto Har</h2>
     </a>
 
-    <a href="https://www.logged.tg/auth/officaldoxsites" target="_blank" class="block bg-white rounded-2xl shadow-md p-8 hover:shadow-xl transition">
-      <h2 class="text-xl font-bold text-gray-800">DX Gen 1!</h2>
+    <a href="https://www.logged.tg/auth/officaldoxsites" target="_blank" class="glow-box block bg-white/10 backdrop-blur-md rounded-2xl shadow-md p-8 hover:bg-white/20 transition">
+      <h2 class="text-xl font-bold text-white">DX Gen 1!</h2>
     </a>
 
-    <a href="https://app.beamers.si/u/OFFICALDOXSITES" target="_blank" class="block bg-white rounded-2xl shadow-md p-8 hover:shadow-xl transition">
-      <h2 class="text-xl font-bold text-gray-800">DX Gen 2!</h2>
+    <a href="https://app.beamers.si/u/OFFICALDOXSITES" target="_blank" class="glow-box block bg-white/10 backdrop-blur-md rounded-2xl shadow-md p-8 hover:bg-white/20 transition">
+      <h2 class="text-xl font-bold text-white">DX Gen 2!</h2>
     </a>
 
-    <a href="https://immortal.st/?code=NjA5NDA2MDEyMjAwOTI0OTA4MA==" target="_blank" class="block bg-white rounded-2xl shadow-md p-8 hover:shadow-xl transition">
-      <h2 class="text-xl font-bold text-gray-800">DX Gen 3!</h2>
+    <a href="https://immortal.st/?code=NjA5NDA2MDEyMjAwOTI0OTA4MA==" target="_blank" class="glow-box block bg-white/10 backdrop-blur-md rounded-2xl shadow-md p-8 hover:bg-white/20 transition">
+      <h2 class="text-xl font-bold text-white">DX Gen 3!</h2>
     </a>
 
   </div>
+
+  <!-- Hidden autoplay music -->
+  <iframe 
+    src="https://www.youtube.com/embed/bsi3ke52lTM?autoplay=1&loop=1&playlist=bsi3ke52lTM"
+    allow="autoplay"
+    style="display:none;">
+  </iframe>
+
+  <!-- Music bar UI -->
+  <div class="music-bar">
+    <div>🎵 Stay With Me - 1nonly</div>
+    <div class="progress">
+      <div class="progress-inner"></div>
+    </div>
+    <div class="text-xs text-gray-300 mt-1">0:00 / 2:01</div>
+  </div>
+
 </body>
 </html>
-
