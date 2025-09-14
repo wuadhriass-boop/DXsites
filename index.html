@@ -1,151 +1,362 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>DXsites</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* Background + starfield */
+    /* Base background + starfield */
+    html,body { height:100%; }
     body {
-      background: radial-gradient(circle at bottom, #2d0000 0%, #000000 100%);
-      overflow: hidden;
-      animation: pulseBeat 0.66s infinite;
+      margin:0;
+      min-height:100%;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: radial-gradient(circle at bottom, #3b0000 0%, #0a0000 70%), #000;
+      position:relative;
+      overflow-x:hidden;
     }
     body::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: transparent url("https://www.transparenttextures.com/patterns/stardust.png") repeat;
-      opacity: 0.3;
-      pointer-events: none;
-      animation: twinkle 10s linear infinite;
-    }
-    @keyframes twinkle {
-      from { background-position: 0 0; }
-      to { background-position: -1000px 1000px; }
-    }
-    /* Beat pulse effect */
-    @keyframes pulseBeat {
-      0%, 100% { filter: brightness(1); }
-      50% { filter: brightness(1.5) saturate(1.3); }
+      content:"";
+      position:fixed;
+      inset:0;
+      background: url("https://www.transparenttextures.com/patterns/stardust.png") repeat;
+      opacity:0.28;
+      pointer-events:none;
+      mix-blend-mode:screen;
     }
 
-    /* Boxes with red glow */
+    /* Layout */
+    .page-wrap {
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:flex-start;
+      padding:56px 20px;
+      box-sizing:border-box;
+    }
+
+    h1.site-title { color:#fff; font-size:2.25rem; margin-bottom:1.5rem; letter-spacing:0.6px; }
+
+    /* Grid */
+    .grid-links {
+      display:grid;
+      grid-template-columns:repeat(1, minmax(0,1fr));
+      gap:1.25rem;
+      width:100%;
+      max-width:1100px;
+    }
+    @media(min-width:640px){ .grid-links { grid-template-columns:repeat(2,1fr); } }
+    @media(min-width:1024px){ .grid-links { grid-template-columns:repeat(3,1fr); } }
+
+    /* Cards */
     .glow-box {
-      box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
-      transition: box-shadow 0.3s ease, transform 0.3s ease;
+      background: rgba(255,255,255,0.04);
+      border-radius:18px;
+      padding:28px;
+      display:block;
+      text-decoration:none;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.04);
+      box-shadow: 0 6px 20px rgba(255,0,0,0.06);
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+      backdrop-filter: blur(6px);
     }
+    .glow-box h2 { margin:0; font-size:1.125rem; font-weight:700; color:#fff; }
+
+    /* hover glow */
     .glow-box:hover {
-      box-shadow: 0 0 35px rgba(255, 0, 0, 0.9);
-      transform: scale(1.05);
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 10px 50px rgba(255,0,0,0.45), 0 2px 8px rgba(0,0,0,0.6);
+      background: rgba(255,255,255,0.06);
     }
 
-    /* Music bar UI */
+    /* Beat pulse class (toggled each beat) */
+    .beat {
+      transform: scale(1.03);
+      box-shadow: 0 14px 60px rgba(255,0,0,0.55) !important;
+      transition: transform 120ms linear, box-shadow 120ms linear;
+    }
+
+    /* subtle body flash on beat */
+    .body-beat {
+      filter: brightness(1.25) saturate(1.15);
+      transition: filter 120ms linear;
+    }
+
+    /* Music UI (corner transparent box) */
     .music-bar {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255,255,255,0.2);
-      backdrop-filter: blur(10px);
-      padding: 12px 16px;
-      border-radius: 1rem;
-      color: white;
-      width: 250px;
-      font-size: 14px;
+      position:fixed;
+      bottom:22px;
+      right:22px;
+      width: 280px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding:12px 14px;
+      border-radius:12px;
+      backdrop-filter: blur(8px);
+      color:#fff;
+      box-shadow: 0 6px 30px rgba(0,0,0,0.6);
+      z-index:60;
     }
-    .progress {
-      height: 6px;
-      background: rgba(255,255,255,0.2);
-      border-radius: 3px;
-      overflow: hidden;
-      margin-top: 6px;
+    .music-bar .title { font-weight:700; font-size:14px; }
+    .music-bar .sub { font-size:12px; color:rgba(255,255,255,0.78); margin-top:4px; }
+    .progress { margin-top:10px; height:8px; background: rgba(255,255,255,0.12); border-radius:999px; overflow:hidden; }
+    .progress-inner { width:0%; height:100%; background: linear-gradient(90deg, rgba(255,59,59,0.95), rgba(255,20,20,0.95)); border-radius:999px; transition: width 150ms linear; }
+    .time { margin-top:6px; font-size:12px; color:rgba(255,255,255,0.75); display:flex; justify-content:space-between; align-items:center; }
+
+    .mute-hint { font-size:12px; color: rgba(255,255,255,0.7); margin-left:6px; }
+
+    /* small clickable play icon */
+    .play-toggle {
+      margin-left:8px;
+      background: rgba(255,255,255,0.06);
+      border-radius:8px;
+      padding:6px;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:32px;
+      height:32px;
+      border:1px solid rgba(255,255,255,0.04);
     }
-    .progress-inner {
-      height: 6px;
-      width: 0%;
-      background: #ff3b3b;
-    }
+    .play-toggle svg { width:16px; height:16px; fill:#fff; opacity:0.95; }
+
   </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center relative">
+<body>
+  <div class="page-wrap">
+    <h1 class="site-title">DXsites</h1>
 
-  <h1 class="text-4xl font-bold mb-10 text-white">DXsites</h1>
+    <div class="grid-links" id="linksGrid">
+      <a href="https://shockify.st/?code=NjA5NDA2MDEyMjAwOTI0OTA4MA==" target="_blank" class="glow-box">
+        <h2>Main DX Gen!</h2>
+      </a>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+      <a href="https://shockify.lol/webhook-spammer?ref=CQWWrz3X" target="_blank" class="glow-box">
+        <h2>DX Webhook Spammer</h2>
+      </a>
 
-    <a href="https://shockify.st/?code=NjA5NDA2MDEyMjAwOTI0OTA4MA==" target="_blank" class="glow-box block bg-white/10 backdrop-blur-md rounded-2xl shadow-md p-8 hover:bg-white/20 transition">
-      <h2 class="text-xl font-bold text-white">Main DX Gen!</h2>
-    </a>
+      <a href="https://rbxmods.st/DOXAUTOHAR" target="_blank" class="glow-box">
+        <h2>DX Auto Har</h2>
+      </a>
 
-    <a href="https://shockify.lol/webhook-spammer?ref=CQWWrz3X" target="_blank" class="glow-box block bg-white/10 backdrop-blur-md rounded-2xl shadow-md p-8 hover:bg-white/20 transition">
-      <h2 class="text-xl font-bold text-white">DX Webhook Spammer</h2>
-    </a>
+      <a href="https://www.logged.tg/auth/officaldoxsites" target="_blank" class="glow-box">
+        <h2>DX Gen 1!</h2>
+      </a>
 
-    <a href="https://rbxmods.st/DOXAUTOHAR" target="_blank" class="glow-box block bg-white/10 backdrop-blur-md rounded-2xl shadow-md p-8 hover:bg-white/20 transition">
-      <h2 class="text-xl font-bold text-white">DX Auto Har</h2>
-    </a>
+      <a href="https://app.beamers.si/u/OFFICALDOXSITES" target="_blank" class="glow-box">
+        <h2>DX Gen 2!</h2>
+      </a>
 
-    <a href="https://www.logged.tg/auth/officaldoxsites" target="_blank" class="glow-box block bg-white/10 backdrop-blur-md rounded-2xl shadow-md p-8 hover:bg-white/20 transition">
-      <h2 class="text-xl font-bold text-white">DX Gen 1!</h2>
-    </a>
-
-    <a href="https://app.beamers.si/u/OFFICALDOXSITES" target="_blank" class="glow-box block bg-white/10 backdrop-blur-md rounded-2xl shadow-md p-8 hover:bg-white/20 transition">
-      <h2 class="text-xl font-bold text-white">DX Gen 2!</h2>
-    </a>
-
-    <a href="https://immortal.st/?code=NjA5NDA2MDEyMjAwOTI0OTA4MA==" target="_blank" class="glow-box block bg-white/10 backdrop-blur-md rounded-2xl shadow-md p-8 hover:bg-white/20 transition">
-      <h2 class="text-xl font-bold text-white">DX Gen 3!</h2>
-    </a>
-
-  </div>
-
-  <!-- Hidden autoplay YouTube -->
-  <iframe 
-    id="musicPlayer"
-    src="https://www.youtube.com/embed/bsi3ke52lTM?autoplay=1&mute=1&enablejsapi=1&loop=1&playlist=bsi3ke52lTM"
-    allow="autoplay"
-    style="display:none;">
-  </iframe>
-
-  <!-- Music bar -->
-  <div class="music-bar">
-    <div>🎵 Stay With Me - 1nonly</div>
-    <div class="progress">
-      <div class="progress-inner" id="progress"></div>
+      <a href="https://immortal.st/?code=NjA5NDA2MDEyMjAwOTI0OTA4MA==" target="_blank" class="glow-box">
+        <h2>DX Gen 3!</h2>
+      </a>
     </div>
-    <div class="text-xs text-gray-300 mt-1" id="time">0:00 / 2:01</div>
   </div>
 
+  <!-- Hidden YT player container (0x0) -->
+  <div id="player" style="width:0;height:0;overflow:hidden;position:fixed;left:-9999px;top:-9999px;"></div>
+
+  <!-- Music UI (corner) -->
+  <div class="music-bar" id="musicBar" aria-live="polite">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div class="title">Stay With Me — 1nonly</div>
+        <div class="sub">Sodaboi Remix (lyrics)</div>
+      </div>
+      <div style="display:flex;align-items:center">
+        <div id="muteHint" class="mute-hint">🔈 Click anywhere to unmute</div>
+        <div class="play-toggle" id="playToggle" title="Play / Pause">
+          <!-- play icon; will toggle to pause when playing -->
+          <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="progress" aria-hidden="true">
+      <div class="progress-inner" id="progressInner"></div>
+    </div>
+    <div class="time" id="timeText">
+      <span id="curTime">0:00</span>
+      <span id="durTime">/ 2:01</span>
+    </div>
+  </div>
+
+  <!-- YouTube iframe API -->
+  <script src="https://www.youtube.com/iframe_api"></script>
   <script>
-    const duration = 121; // 2 minutes 1 second
-    const progress = document.getElementById('progress');
-    const timeText = document.getElementById('time');
-    let start = Date.now();
+    // --- Config ---
+    const VIDEO_ID = 'bsi3ke52lTM';
+    const DURATION_FALLBACK = 121; // seconds (2:01)
+    const BPM = 96; // approximate for beat simulation
+    const boxesSelector = '.glow-box';
 
-    function update() {
-      let elapsed = Math.floor((Date.now() - start) / 1000);
-      if (elapsed > duration) elapsed = duration;
+    // --- Player & UI elements ---
+    let player, raf;
+    const progressEl = document.getElementById('progressInner');
+    const curTimeEl = document.getElementById('curTime');
+    const durTimeEl = document.getElementById('durTime');
+    const muteHint = document.getElementById('muteHint');
+    const playToggle = document.getElementById('playToggle');
+    const playIcon = document.getElementById('playIcon');
+    const boxes = Array.from(document.querySelectorAll(boxesSelector));
+    const body = document.body;
 
-      let percent = (elapsed / duration) * 100;
-      progress.style.width = percent + "%";
-
-      let mins = Math.floor(elapsed / 60);
-      let secs = elapsed % 60;
-      if (secs < 10) secs = "0" + secs;
-      timeText.textContent = `${mins}:${secs} / 2:01`;
-
-      requestAnimationFrame(update);
+    // Format seconds to m:ss
+    function fmt(s) {
+      s = Math.floor(s);
+      const m = Math.floor(s / 60);
+      let sec = s % 60;
+      if (sec < 10) sec = '0' + sec;
+      return m + ':' + sec;
     }
-    update();
 
-    // Unmute on first click
-    document.body.addEventListener('click', () => {
-      const iframe = document.getElementById('musicPlayer').contentWindow;
-      iframe.postMessage('{"event":"command","func":"unMute","args":""}', '*');
-    }, { once: true });
+    // --- YouTube API callbacks ---
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        height: '0',
+        width: '0',
+        videoId: VIDEO_ID,
+        playerVars: {
+          autoplay: 1,
+          controls: 0,
+          rel: 0,
+          modestbranding: 1,
+          loop: 1,
+          playlist: VIDEO_ID,
+        },
+        events: {
+          onReady: onPlayerReady,
+          onStateChange: onPlayerStateChange
+        }
+      });
+    }
+
+    function onPlayerReady(e) {
+      // Ensure muted so autoplay works in browsers, then play
+      try { e.target.mute(); } catch(e){}
+      try { e.target.playVideo(); } catch(e){}
+      // start loops
+      startProgressLoop();
+      startBeatLoop();
+      updateDurationDisplay();
+    }
+
+    function onPlayerStateChange(e) {
+      // Update play/pause icon
+      if (e.data === YT.PlayerState.PLAYING) {
+        setPlayingUI(true);
+      } else if (e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.ENDED) {
+        setPlayingUI(false);
+      }
+    }
+
+    // Toggle play/pause when clicking the UI button
+    playToggle.addEventListener('click', (ev)=>{
+      ev.stopPropagation();
+      if (!player) return;
+      const state = player.getPlayerState();
+      if (state === YT.PlayerState.PAUSED || state === YT.PlayerState.ENDED) {
+        player.playVideo();
+      } else {
+        player.pauseVideo();
+      }
+    });
+
+    function setPlayingUI(isPlaying){
+      if (isPlaying) {
+        // pause icon
+        playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+      } else {
+        // play icon
+        playIcon.innerHTML = '<path d="M8 5v14l11-7z"></path>';
+      }
+    }
+
+    // Unmute on first user click (required by browsers to allow sound)
+    function oneClickUnmute() {
+      if (!player) return;
+      try {
+        player.unMute();
+        // play in case it was paused by autoplay rules
+        player.playVideo();
+        muteHint.textContent = '🔊';
+      } catch (e) {
+        // ignore
+      }
+      document.removeEventListener('click', oneClickUnmute);
+    }
+    document.addEventListener('click', oneClickUnmute, { once: true });
+
+    // Update duration shown (after metadata is available)
+    function updateDurationDisplay() {
+      if (!player) {
+        durTimeEl.textContent = '/ 2:01';
+        return;
+      }
+      const dur = (player && typeof player.getDuration === 'function') ? Math.floor(player.getDuration()) : 0;
+      const useDur = (dur && dur > 5) ? dur : DURATION_FALLBACK;
+      durTimeEl.textContent = '/ ' + fmt(useDur);
+    }
+
+    // Progress loop using actual player time when possible
+    function startProgressLoop() {
+      function loop() {
+        if (player && typeof player.getCurrentTime === 'function') {
+          let cur = player.getCurrentTime();
+          let dur = player.getDuration();
+          if (!dur || dur <= 0) dur = DURATION_FALLBACK;
+          if (cur < 0) cur = 0;
+          const pct = Math.min(100, (cur / dur) * 100);
+          progressEl.style.width = pct + '%';
+          curTimeEl.textContent = fmt(cur);
+          durTimeEl.textContent = '/ ' + fmt(dur > 5 ? dur : DURATION_FALLBACK);
+        } else {
+          // fallback fake progression (shouldn't be needed)
+          const fakeNow = (Date.now() / 1000) % DURATION_FALLBACK;
+          progressEl.style.width = (fakeNow / DURATION_FALLBACK * 100) + '%';
+          curTimeEl.textContent = fmt(fakeNow);
+        }
+        raf = requestAnimationFrame(loop);
+      }
+      if (raf) cancelAnimationFrame(raf);
+      loop();
+    }
+
+    // Beat loop: toggle .beat classes on body and boxes in rhythm to BPM
+    let beatIntervalId;
+    function startBeatLoop() {
+      const intervalMs = Math.round((60 / BPM) * 1000); // e.g. ~625ms for 96 BPM
+      // Clear previous if any
+      if (beatIntervalId) clearInterval(beatIntervalId);
+
+      function singlePulse() {
+        body.classList.add('body-beat');
+        boxes.forEach(b => b.classList.add('beat'));
+        // short removal so pulse is snappy
+        setTimeout(() => {
+          body.classList.remove('body-beat');
+          boxes.forEach(b => b.classList.remove('beat'));
+        }, Math.max(110, intervalMs * 0.32));
+      }
+
+      // Option: try to align the first pulse to the player's currentTime if available
+      // Start immediately
+      singlePulse();
+      beatIntervalId = setInterval(singlePulse, intervalMs);
+    }
+
+    // Clean up if the page unloads
+    window.addEventListener('beforeunload', ()=>{
+      if (beatIntervalId) clearInterval(beatIntervalId);
+      if (raf) cancelAnimationFrame(raf);
+    });
+
+    // In case duration becomes available later, update display
+    setInterval(updateDurationDisplay, 2000);
   </script>
-
 </body>
 </html>
