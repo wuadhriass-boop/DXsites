@@ -11,28 +11,25 @@
       height:100%;
       margin:0;
       font-family:'Poppins', sans-serif;
-      background: radial-gradient(circle at top, #000005 0%, #050510 40%, #0a0b15 100%);
+      background: radial-gradient(circle at top, #000000 0%, #050510 40%, #08080e 100%);
       color:#fff;
       overflow-x:hidden;
     }
 
-    /* --- Stars --- */
-    body::before {
-      content:"";
+    /* --- Soft Stars --- */
+    .star {
       position:fixed;
-      inset:0;
-      background: radial-gradient(white, rgba(255,255,255,0) 70%) 0 0/2px 2px,
-                  radial-gradient(white, rgba(255,255,255,0) 70%) 50px 100px/2px 2px,
-                  radial-gradient(white, rgba(255,255,255,0) 70%) 130px 250px/2px 2px,
-                  radial-gradient(white, rgba(255,255,255,0) 70%) 300px 400px/2px 2px;
+      width:2px;
+      height:2px;
+      background:white;
+      border-radius:50%;
       opacity:0.3;
-      animation: starTwinkle 8s linear infinite alternate;
-      pointer-events:none;
+      animation: twinkle 5s infinite alternate;
       z-index:0;
     }
-    @keyframes starTwinkle {
-      from { opacity:0.2; }
-      to { opacity:0.5; }
+    @keyframes twinkle {
+      from { opacity:0.2; transform:scale(0.7); }
+      to { opacity:0.5; transform:scale(1.2); }
     }
 
     /* --- Shooting stars --- */
@@ -44,7 +41,7 @@
       opacity:0.4;
       transform: rotate(45deg);
       top:-100px;
-      animation: shoot 5s linear infinite;
+      animation: shoot 6s linear infinite;
       z-index:0;
     }
     .shooting-star:nth-child(1) { left:10%; animation-delay:2s; }
@@ -64,42 +61,33 @@
       height: 120px;
       border-radius: 50%;
       background: radial-gradient(circle at 30% 30%, #fff 0%, #ddd 60%, #bbb 100%);
-      box-shadow: 0 0 60px rgba(255,255,255,0.4);
+      box-shadow: 0 0 60px rgba(255,255,255,0.3);
       z-index: 1;
     }
 
-    /* --- Clouds behind moon --- */
-    .cloud-back {
+    /* --- Cloud layers --- */
+    .cloud-back, .cloud-front {
       position: fixed;
-      top: 200px;
       width: 500px;
       height: 140px;
-      background: rgba(255,255,255,0.03);
       border-radius: 200px;
       filter: blur(25px);
       animation: cloudMove 90s linear infinite, fadeInOut 20s ease-in-out infinite;
       z-index: 0;
+      background: rgba(255,255,255,0.02);
+    }
+    .cloud-front { 
+      background: rgba(255,255,255,0.04); 
+      filter: blur(20px);
+      z-index:2;
+      animation-duration: 60s, 15s;
     }
     .cloud-back:nth-child(1) { left:-700px; top:220px; animation-delay:0s; }
     .cloud-back:nth-child(2) { left:-1000px; top:300px; animation-delay:30s; }
     .cloud-back:nth-child(3) { left:-900px; top:180px; animation-delay:60s; }
-
-    /* --- Clouds in front --- */
-    .cloud-front {
-      position: fixed;
-      top: 160px;
-      width: 400px;
-      height: 120px;
-      background: rgba(255,255,255,0.05);
-      border-radius: 200px;
-      filter: blur(20px);
-      animation: cloudMove 60s linear infinite, fadeInOut 15s ease-in-out infinite;
-      z-index: 2;
-    }
     .cloud-front:nth-child(1) { left:-600px; top:250px; animation-delay:0s; }
     .cloud-front:nth-child(2) { left:-800px; top:320px; animation-delay:20s; }
     .cloud-front:nth-child(3) { left:-500px; top:180px; animation-delay:40s; }
-
     @keyframes cloudMove {
       from { transform: translateX(0); }
       to { transform: translateX(200vw); }
@@ -162,7 +150,7 @@
       position:fixed;
       bottom:22px;
       right:22px;
-      width: 280px;
+      width: 320px;
       background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.08);
       padding:12px 14px;
@@ -172,6 +160,24 @@
       z-index:60;
       box-shadow: 0 6px 30px rgba(0,0,0,0.6);
       display:none;
+    }
+    .music-bar-top {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .music-bar button {
+      background:none;
+      border:none;
+      color:#fff;
+      font-size:14px;
+      cursor:pointer;
+      padding:4px 10px;
+      border-radius:8px;
+      transition: background .2s;
+    }
+    .music-bar button:hover {
+      background:rgba(255,255,255,0.1);
     }
     .progress { margin-top:10px; height:8px; background: rgba(255,255,255,0.12); border-radius:999px; overflow:hidden; }
     .progress-inner { width:0%; height:100%; background: linear-gradient(90deg, rgba(255,100,100,0.95), rgba(255,20,20,0.95)); border-radius:999px; transition: width 150ms linear; }
@@ -204,16 +210,17 @@
   </style>
 </head>
 <body>
+  <!-- Stars -->
+  <div class="star" style="top:10%;left:20%"></div>
+  <div class="star" style="top:30%;left:60%"></div>
+  <div class="star" style="top:50%;left:40%"></div>
+  <div class="star" style="top:70%;left:80%"></div>
+  <div class="star" style="top:80%;left:15%"></div>
+
   <div class="moon"></div>
-  <div class="cloud-back"></div>
-  <div class="cloud-back"></div>
-  <div class="cloud-back"></div>
-  <div class="cloud-front"></div>
-  <div class="cloud-front"></div>
-  <div class="cloud-front"></div>
-  <div class="shooting-star"></div>
-  <div class="shooting-star"></div>
-  <div class="shooting-star"></div>
+  <div class="cloud-back"></div><div class="cloud-back"></div><div class="cloud-back"></div>
+  <div class="cloud-front"></div><div class="cloud-front"></div><div class="cloud-front"></div>
+  <div class="shooting-star"></div><div class="shooting-star"></div><div class="shooting-star"></div>
 
   <div class="page-wrap">
     <h1 class="site-title">DXsites</h1>
@@ -230,7 +237,10 @@
   <div id="player" style="width:0;height:0;overflow:hidden;position:fixed;left:-9999px;top:-9999px;"></div>
 
   <div class="music-bar" id="musicBar">
-    <div style="font-weight:600">🎵 Stay With Me — 1nonly</div>
+    <div class="music-bar-top">
+      <div style="font-weight:600">🎵 Stay With Me — 1nonly</div>
+      <button id="pauseBtn">⏸ Pause</button>
+    </div>
     <div class="progress"><div class="progress-inner" id="progressInner"></div></div>
     <div class="time"><span id="curTime">0:00</span><span id="durTime">/ 2:01</span></div>
   </div>
@@ -251,6 +261,7 @@
     const durTimeEl = document.getElementById('durTime');
     const musicBar = document.getElementById('musicBar');
     const startBtn = document.getElementById('startBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
 
     function fmt(s){s=Math.floor(s);return Math.floor(s/60)+":"+(s%60<10?"0":"")+(s%60);}
 
@@ -273,6 +284,17 @@
       musicBar.style.display='block';
       updateLoop();
       startBeat();
+    };
+
+    pauseBtn.onclick = ()=>{
+      const state = player.getPlayerState();
+      if(state===1){ // playing
+        player.pauseVideo();
+        pauseBtn.textContent='▶️ Play';
+      } else {
+        player.playVideo();
+        pauseBtn.textContent='⏸ Pause';
+      }
     };
 
     function updateLoop(){
