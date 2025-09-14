@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -16,7 +16,7 @@
       overflow-x:hidden;
     }
 
-    /* --- Soft Stars --- */
+    /* --- Stars --- */
     .star {
       position:fixed;
       width:2px;
@@ -180,33 +180,45 @@
       background:rgba(255,255,255,0.1);
     }
     .progress { margin-top:10px; height:8px; background: rgba(255,255,255,0.12); border-radius:999px; overflow:hidden; }
-    .progress-inner { width:0%; height:100%; background: linear-gradient(90deg, rgba(255,100,100,0.95), rgba(255,20,20,0.95)); border-radius:999px; transition: width 150ms linear; }
+    .progress-inner { width:0%; height:100%; background: linear-gradient(90deg, rgba(255,100,255,0.95), rgba(255,20,20,0.95)); border-radius:999px; transition: width 150ms linear; }
     .time { margin-top:6px; font-size:12px; color:rgba(255,255,255,0.75); display:flex; justify-content:space-between; }
 
     /* Start overlay */
     #startOverlay {
       position:fixed; inset:0;
-      background: rgba(0,0,0,0.95);
+      background: linear-gradient(135deg, #a0d8ff 0%, #6ec0ff 100%);
       color:white;
       display:flex;
       flex-direction:column;
       align-items:center;
       justify-content:center;
-      z-index:100;
+      z-index:9999;
       text-align:center;
+      text-shadow: 0 2px 15px rgba(0,150,255,0.7);
+      box-shadow: 0 0 60px rgba(0,200,255,0.4) inset;
+    }
+    #startOverlay h1, #startOverlay p {
+      margin:0;
+      padding:0.2em 0;
+      text-shadow: 0 0 15px rgba(0,200,255,0.8);
     }
     #startOverlay button {
       margin-top:20px;
       padding:12px 28px;
-      background:#ff3b3b;
+      background:#00bfff;
       border:none;
       border-radius:12px;
       font-size:16px;
       color:#fff;
       cursor:pointer;
-      transition: background .2s ease;
+      transition: background .2s ease, box-shadow .2s ease;
+      box-shadow: 0 0 20px rgba(0,180,255,0.6);
     }
-    #startOverlay button:hover { background:#ff2020; }
+    #startOverlay button:hover { 
+      background:#1ec0ff; 
+      box-shadow: 0 0 30px rgba(0,200,255,0.8);
+    }
+
   </style>
 </head>
 <body>
@@ -220,100 +232,4 @@
   <div class="moon"></div>
   <div class="cloud-back"></div><div class="cloud-back"></div><div class="cloud-back"></div>
   <div class="cloud-front"></div><div class="cloud-front"></div><div class="cloud-front"></div>
-  <div class="shooting-star"></div><div class="shooting-star"></div><div class="shooting-star"></div>
-
-  <div class="page-wrap">
-    <h1 class="site-title">DXsites</h1>
-    <div class="grid-links">
-      <a href="https://shockify.st/?code=NjA5NDA2MDEyMjAwOTI0OTA4MA==" target="_blank" class="glow-box"><h2>Main DX Gen!</h2></a>
-      <a href="https://shockify.lol/webhook-spammer?ref=CQWWrz3X" target="_blank" class="glow-box"><h2>DX Webhook Spammer</h2></a>
-      <a href="https://rbxmods.st/DOXAUTOHAR" target="_blank" class="glow-box"><h2>DX Auto Har</h2></a>
-      <a href="https://www.logged.tg/auth/officaldoxsites" target="_blank" class="glow-box"><h2>DX Gen 1!</h2></a>
-      <a href="https://app.beamers.si/u/OFFICALDOXSITES" target="_blank" class="glow-box"><h2>DX Gen 2!</h2></a>
-      <a href="https://immortal.st/?code=NjA5NDA2MDEyMjAwOTI0OTA4MA==" target="_blank" class="glow-box"><h2>DX Gen 3!</h2></a>
-    </div>
-  </div>
-
-  <div id="player" style="width:0;height:0;overflow:hidden;position:fixed;left:-9999px;top:-9999px;"></div>
-
-  <div class="music-bar" id="musicBar">
-    <div class="music-bar-top">
-      <div style="font-weight:600">🎵 Stay With Me — 1nonly</div>
-      <button id="pauseBtn">⏸ Pause</button>
-    </div>
-    <div class="progress"><div class="progress-inner" id="progressInner"></div></div>
-    <div class="time"><span id="curTime">0:00</span><span id="durTime">/ 2:01</span></div>
-  </div>
-
-  <div id="startOverlay">
-    <h1>Welcome to DXsites</h1>
-    <p>Click below to enter the night 🌙</p>
-    <button id="startBtn" disabled>Loading...</button>
-  </div>
-
-  <script src="https://www.youtube.com/iframe_api"></script>
-  <script>
-    const VIDEO_ID = 'bsi3ke52lTM';
-    let player, raf;
-    const boxes = document.querySelectorAll('.glow-box');
-    const progressEl = document.getElementById('progressInner');
-    const curTimeEl = document.getElementById('curTime');
-    const durTimeEl = document.getElementById('durTime');
-    const musicBar = document.getElementById('musicBar');
-    const startBtn = document.getElementById('startBtn');
-    const pauseBtn = document.getElementById('pauseBtn');
-
-    function fmt(s){s=Math.floor(s);return Math.floor(s/60)+":"+(s%60<10?"0":"")+(s%60);}
-
-    function onYouTubeIframeAPIReady(){
-      player=new YT.Player('player',{
-        videoId:VIDEO_ID,
-        playerVars:{autoplay:0,controls:0,loop:1,playlist:VIDEO_ID},
-        events:{onReady:onReady}
-      });
-    }
-    function onReady(){
-      startBtn.disabled = false;
-      startBtn.textContent = 'Start';
-    }
-
-    startBtn.onclick = ()=>{
-      player.playVideo();
-      player.unMute();
-      document.getElementById('startOverlay').style.display='none';
-      musicBar.style.display='block';
-      updateLoop();
-      startBeat();
-    };
-
-    pauseBtn.onclick = ()=>{
-      const state = player.getPlayerState();
-      if(state===1){ // playing
-        player.pauseVideo();
-        pauseBtn.textContent='▶️ Play';
-      } else {
-        player.playVideo();
-        pauseBtn.textContent='⏸ Pause';
-      }
-    };
-
-    function updateLoop(){
-      function loop(){
-        const c=player.getCurrentTime();
-        const d=player.getDuration()||121;
-        progressEl.style.width=(c/d*100)+'%';
-        curTimeEl.textContent=fmt(c);
-        durTimeEl.textContent='/ '+fmt(d);
-        raf=requestAnimationFrame(loop);
-      }
-      loop();
-    }
-
-    function startBeat(){
-      setInterval(()=>{
-        boxes.forEach(b=>{b.classList.add('beat'); setTimeout(()=>b.classList.remove('beat'),150);});
-      }, 600);
-    }
-  </script>
-</body>
-</html>
+  <div class="shooting-star"></div><
